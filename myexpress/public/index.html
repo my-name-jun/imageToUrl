@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>以我之名，冠你之姓</title>
+    <style>
+      * {
+        /* height: 100%;*/
+        padding: 0;
+        margin: 0;
+      }
+      img {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div><span>请输入标题：</span><input type="text" id="title" /></div>
+    <div><span>请输入图片url：</span><input type="text" id="url" /></div>
+    <div>
+      <span>请输入你期望的url链接：</span><input type="text" id="src" />
+    </div>
+    <div>
+      <button id="submit" style="width: 50px;height:50px;margin:30px;">
+        提交
+      </button>
+    </div>
+    <div>生成的链接为：<span id="result"></span></div>
+  </body>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script type="text/javascript">
+    $('#submit').click(function() {
+      let titleValue = $('#title').val()
+      let urlValue = $('#url').val()
+      let srcValue = $('#src').val()
+      let jsonData = {
+        titleValue,
+        urlValue,
+        srcValue
+      }
+      $.ajax({
+        url: '/test',
+        method: 'post',
+        data: JSON.stringify(jsonData),
+        contentType: 'application/json;charest=utf-8',
+        dataType: 'json',
+        success: function(data) {
+          console.log(data)
+          var ss = document.getElementById('result')
+          ss.innerHTML = data.result
+        }
+      })
+    })
+  </script>
+</html>
