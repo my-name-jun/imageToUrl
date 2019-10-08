@@ -65,7 +65,7 @@ router.post('/test', function(req, res, next) {
     replaceFile(sourcePath2 + '/' + src + '.html', title, url)
     res.writeHead(200, { 'Content-Type': 'application/json' })
     var aa = {
-      result: 'http://106.54.244.36:3000/test/' + src + '.html'
+      result: 'http://106.54.244.36/test/' + src + '.html'
     }
     res.end(JSON.stringify(aa))
   })

@@ -97,9 +97,9 @@
       <div style="margin: 30px 0 20px">
         <span>请选择上传图片类型</span>
         <span class="selectBtn" id="cdn">使用cdn</span>
-        <span class="selectBtn" id="up">上传图片</span>
+        <!-- <span class="selectBtn" id="up">上传图片</span> -->
       </div>
-      <div id="userUrl" style="display: none">
+      <div id="userUrl">
         <span>请输入图片url：</span
         ><input
           type="text"
@@ -108,8 +108,7 @@
           style="margin: 0 0 30px 55px"
         />
       </div>
-      <div style="width: 500px;display: none;margin-bottom: 30px;" id="userUp">
-        <!-- <span>请输入你期望的url链接：</span><input type="text" id="src" /> -->
+      <!-- <div style="width: 500px;display: none;margin-bottom: 30px;" id="userUp">
         <span>请上传图片：</span>
         <input
           type="file"
@@ -118,7 +117,7 @@
           onchange="changepic(this)"
         />
         <img src="#" id="img3" />
-      </div>
+      </div> -->
       <div>
         <button id="submit">
           提交
@@ -129,14 +128,46 @@
   </body>
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
   <script type="text/javascript">
-    // let date = new Date().getTime()
-    let urlValue
-    let selectId
+    // 获取url参数
+    function getQueryVariable(variable) {
+      var query = window.location.search.substring(1)
+      var vars = query.split('&')
+      for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split('=')
+        if (pair[0] == variable) {
+          return pair[1]
+        }
+      }
+      return false
+    }
+
+    function isLogin() {
+      let ticket = getQueryVariable('ticket')
+      if (ticket) {
+        let verification =
+          'https://sso.inkept.cn/api/v1/user/ticket/' + ticket + '/check2'
+        $.ajax({
+          url: verification,
+          method: 'get',
+          contentType: 'application/json;charest=utf-8',
+          dataType: 'json',
+          success: function(data) {
+            if (data.status !== 0) {
+              window.location.href =
+          'https://sso.inkept.cn/?service=http://192.168.119.156'
+            }
+          }
+        })
+      } else {
+        window.location.href =
+          ' https://sso.inkept.cn/?service=http://192.168.119.156'
+      }
+    }
+    isLogin()
+
     $('#submit').click(function() {
       let titleValue = $('#title').val()
-      if (selectId === 1) {
-        urlValue = $('#url').val()
-      }
+      let urlValue = $('#url').val()
       let date = new Date().getTime()
       let srcValue = date
       let jsonData = {
