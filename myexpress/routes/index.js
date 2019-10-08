@@ -38,7 +38,6 @@ function replaceFile(someFile, title, url) {
     if (err) {
       console.log(err)
     } else {
-      console.log(title, url)
       var resultTitle = data.replace(/resultTitle/g, title)
       var result = resultTitle.replace(/resultImg/g, url)
       fs.writeFile(someFile, result, err => {

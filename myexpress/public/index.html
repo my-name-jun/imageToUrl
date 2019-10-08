@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"
     />
-    <title>以我之名，冠你之姓</title>
+    <title>自动生成链接</title>
     <style>
       * {
         /* height: 100%;*/
@@ -16,13 +16,50 @@
       img {
         display: block;
       }
+      .filepath {
+        width: 200px;
+        /* height: 100px; */
+      }
+      #img3 {
+        /* height: 100%;
+        width: 100%; */
+        width: 100px;
+        height: 100px;
+        display: none;
+        float: right;
+      }
+      .selectBtn {
+        width: 100px;
+        height: 30px;
+        border: 1px solid blue;
+        display: inline-block;
+        text-align: center;
+        line-height: 30px;
+        margin-left: 20px;
+        background-color: beige;
+      }
     </style>
   </head>
   <body>
     <div><span>请输入标题：</span><input type="text" id="title" /></div>
-    <div><span>请输入图片url：</span><input type="text" id="url" /></div>
-    <div>
-      <span>请输入你期望的url链接：</span><input type="text" id="src" />
+    <div style="margin: 20px 0 20px">
+      <span>请选择上传图片类型</span>
+      <span class="selectBtn" id="cdn">使用cdn</span>
+      <span class="selectBtn" id="up">上传图片</span>
+    </div>
+    <div id="userUrl" style="display: none">
+      <span>请输入图片url：</span><input type="text" id="url" />
+    </div>
+    <div style="width: 500px;display: none;" id="userUp">
+      <!-- <span>请输入你期望的url链接：</span><input type="text" id="src" /> -->
+      <span>请上传图片：</span
+      ><input
+        type="file"
+        id="file"
+        class="filepath"
+        onchange="changepic(this)"
+      />
+      <img src="#" id="img3" />
     </div>
     <div>
       <button id="submit" style="width: 50px;height:50px;margin:30px;">
@@ -33,15 +70,23 @@
   </body>
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
   <script type="text/javascript">
+    // let date = new Date().getTime()
+    let urlValue
+    let selectId
     $('#submit').click(function() {
       let titleValue = $('#title').val()
-      let urlValue = $('#url').val()
-      let srcValue = $('#src').val()
+      if (selectId === 1) {
+        urlValue = $('#url').val()
+      }
+      let date = new Date().getTime()
+      let srcValue = date
       let jsonData = {
         titleValue,
         urlValue,
         srcValue
       }
+      console.log(jsonData)
+      let fileValue = $('#file').val()
       $.ajax({
         url: '/test',
         method: 'post',
@@ -54,6 +99,31 @@
           ss.innerHTML = data.result
         }
       })
+    })
+    function changepic() {
+      $('#prompt3').css('display', 'none')
+      var reads = new FileReader()
+      f = document.getElementById('file').files[0]
+      reads.readAsDataURL(f)
+      reads.onload = function(e) {
+        document.getElementById('img3').src = this.result
+        urlValue = this.result
+        $('#img3').css('display', 'block')
+      }
+    }
+    $('#cdn').click(function() {
+      $('#userUrl').css('display', 'block')
+      $('#userUp').css('display', 'none')
+      $('#cdn').css('background-color', 'red')
+      $('#up').css('background-color', 'beige')
+      selectId = 1
+    })
+    $('#up').click(function() {
+      $('#userUp').css('display', 'block')
+      $('#userUrl').css('display', 'none')
+      $('#up').css('background-color', 'red')
+      $('#cdn').css('background-color', 'beige')
+      selectId = 2
     })
   </script>
 </html>
