@@ -13,11 +13,35 @@
         padding: 0;
         margin: 0;
       }
+      body {
+        background: url(http://img.ikstatic.cn/MTU1NjY5NTkyMzMxOSMzNTcjanBn.jpg);
+      }
+      .container {
+        width: 520px;
+        height: auto;
+        margin: 80px auto;
+        /* text-align: center; */
+      }
       img {
         display: block;
       }
+      span {
+        color: white;
+      }
+      .inputStr {
+        font-size: 0.4rem;
+        font-family: Alibaba PuHuiTi;
+        font-weight: 500;
+        color: black;
+        line-height: 0.747rem;
+        width: 200px;
+        height: 23px;
+        line-height: 23px;
+        margin-left: 72px;
+      }
       .filepath {
         width: 200px;
+        margin-left: 70px;
         /* height: 100px; */
       }
       #img3 {
@@ -30,43 +54,78 @@
       }
       .selectBtn {
         width: 100px;
-        height: 30px;
-        border: 1px solid blue;
+        height: 23px;
         display: inline-block;
         text-align: center;
-        line-height: 30px;
+        line-height: 23px;
         margin-left: 20px;
-        background-color: beige;
+        background-color: rgba(113, 174, 210, 0.6);
+        border: 1.5px solid #71aed2;
+        margin-bottom: 20px;
+        padding: 8px 0;
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
+        color: #fff;
+        font-weight: 900;
+      }
+      #submit {
+        background-color: rgba(210, 195, 53, 0.6);
+        border: 1.5px solid #d2c335;
+        border-radius: 8px;
+        width: 148px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        cursor: pointer;
+        color: #fff;
+        font-weight: 900;
+        margin: 0 auto;
+      }
+      .generateUrl {
+        color: white;
+        margin: 20px auto;
       }
     </style>
   </head>
   <body>
-    <div><span>请输入标题：</span><input type="text" id="title" /></div>
-    <div style="margin: 20px 0 20px">
-      <span>请选择上传图片类型</span>
-      <span class="selectBtn" id="cdn">使用cdn</span>
-      <span class="selectBtn" id="up">上传图片</span>
+    <div class="container">
+      <div>
+        <span>请输入标题：</span
+        ><input type="text" id="title" class="inputStr" />
+      </div>
+      <div style="margin: 30px 0 20px">
+        <span>请选择上传图片类型</span>
+        <span class="selectBtn" id="cdn">使用cdn</span>
+        <span class="selectBtn" id="up">上传图片</span>
+      </div>
+      <div id="userUrl" style="display: none">
+        <span>请输入图片url：</span
+        ><input
+          type="text"
+          id="url"
+          class="inputStr"
+          style="margin: 0 0 30px 55px"
+        />
+      </div>
+      <div style="width: 500px;display: none;margin-bottom: 30px;" id="userUp">
+        <!-- <span>请输入你期望的url链接：</span><input type="text" id="src" /> -->
+        <span>请上传图片：</span>
+        <input
+          type="file"
+          id="file"
+          class="filepath"
+          onchange="changepic(this)"
+        />
+        <img src="#" id="img3" />
+      </div>
+      <div>
+        <button id="submit">
+          提交
+        </button>
+      </div>
+      <div class="generateUrl">生成的链接为：<span id="result"></span></div>
     </div>
-    <div id="userUrl" style="display: none">
-      <span>请输入图片url：</span><input type="text" id="url" />
-    </div>
-    <div style="width: 500px;display: none;" id="userUp">
-      <!-- <span>请输入你期望的url链接：</span><input type="text" id="src" /> -->
-      <span>请上传图片：</span
-      ><input
-        type="file"
-        id="file"
-        class="filepath"
-        onchange="changepic(this)"
-      />
-      <img src="#" id="img3" />
-    </div>
-    <div>
-      <button id="submit" style="width: 50px;height:50px;margin:30px;">
-        提交
-      </button>
-    </div>
-    <div>生成的链接为：<span id="result"></span></div>
   </body>
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
   <script type="text/javascript">
@@ -86,26 +145,30 @@
         srcValue
       }
       console.log(jsonData)
-      let fileValue = $('#file').val()
-      $.ajax({
-        url: '/test',
-        method: 'post',
-        data: JSON.stringify(jsonData),
-        contentType: 'application/json;charest=utf-8',
-        dataType: 'json',
-        success: function(data) {
-          console.log(data)
-          var ss = document.getElementById('result')
-          ss.innerHTML = data.result
-        }
-      })
+      if (urlValue === '' || titleValue === '') {
+        alert('请完善表单！')
+      } else {
+        $.ajax({
+          url: '/test',
+          method: 'post',
+          data: JSON.stringify(jsonData),
+          contentType: 'application/json;charest=utf-8',
+          dataType: 'json',
+          success: function(data) {
+            console.log(data)
+            var ss = document.getElementById('result')
+            ss.innerHTML = data.result
+          }
+        })
+      }
     })
     function changepic() {
       $('#prompt3').css('display', 'none')
       var reads = new FileReader()
       f = document.getElementById('file').files[0]
-      reads.readAsDataURL(f)
+      reads.readAsDataURL(f) //转成base64
       reads.onload = function(e) {
+        //在上述读取事件完成时触发
         document.getElementById('img3').src = this.result
         urlValue = this.result
         $('#img3').css('display', 'block')
@@ -114,15 +177,15 @@
     $('#cdn').click(function() {
       $('#userUrl').css('display', 'block')
       $('#userUp').css('display', 'none')
-      $('#cdn').css('background-color', 'red')
-      $('#up').css('background-color', 'beige')
+      $('#cdn').css('background-color', 'rgba(98,173,122,.6)')
+      $('#up').css('background-color', 'rgba(113, 174, 210, 0.6)')
       selectId = 1
     })
     $('#up').click(function() {
       $('#userUp').css('display', 'block')
       $('#userUrl').css('display', 'none')
-      $('#up').css('background-color', 'red')
-      $('#cdn').css('background-color', 'beige')
+      $('#up').css('background-color', 'rgba(98,173,122,.6)')
+      $('#cdn').css('background-color', 'rgba(113, 174, 210, 0.6)')
       selectId = 2
     })
   </script>
