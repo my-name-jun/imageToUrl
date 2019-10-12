@@ -17,10 +17,9 @@
         background: url(http://img.ikstatic.cn/MTU1NjY5NTkyMzMxOSMzNTcjanBn.jpg);
       }
       .container {
-        width: 520px;
+        width: 550px;
         height: auto;
         margin: 80px auto;
-        /* text-align: center; */
       }
       img {
         display: block;
@@ -129,6 +128,7 @@
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
   <script type="text/javascript">
     // 获取url参数
+    let domain = window.location.host
     function getQueryVariable(variable) {
       var query = window.location.search.substring(1)
       var vars = query.split('&')
@@ -143,7 +143,9 @@
 
     function isLogin() {
       let ticket = getQueryVariable('ticket')
+      let ticketParameter = localStorage.getItem('ticket')
       if (ticket) {
+        localStorage.setItem('ticket', ticket)
         let verification =
           'https://sso.inkept.cn/api/v1/user/ticket/' + ticket + '/check2'
         $.ajax({
@@ -154,13 +156,17 @@
           success: function(data) {
             if (data.status !== 0) {
               window.location.href =
-          'https://sso.inkept.cn/?service=http://106.54.244.36'
+                'https://sso.inkept.cn/?service=http://' + domain
             }
           }
         })
       } else {
-        window.location.href =
-          ' https://sso.inkept.cn/?service=http://106.54.244.36'
+        if (ticketParameter) {
+          window.location.href = 'http://' + domain + '?ticket=' + ticketParameter
+        } else {
+          window.location.href =
+                'https://sso.inkept.cn/?service=http://' + domain
+        }
       }
     }
     isLogin()
@@ -173,9 +179,9 @@
       let jsonData = {
         titleValue,
         urlValue,
-        srcValue
+        srcValue,
+        domain
       }
-      console.log(jsonData)
       if (urlValue === '' || titleValue === '') {
         alert('请完善表单！')
       } else {
