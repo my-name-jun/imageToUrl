@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>上传图片</title>
+    <style>
+      * {
+        /* height: 100%;*/
+        padding: 0;
+        margin: 0;
+      }
+      body {
+        background: url(http://img.ikstatic.cn/MTU1NjY5NTkyMzMxOSMzNTcjanBn.jpg);
+      }
+      .container {
+        width: 550px;
+        height: auto;
+        margin: 80px auto;
+      }
+      img {
+        display: block;
+      }
+      span {
+        color: white;
+      }
+      .inputStr {
+        font-size: 0.4rem;
+        font-family: Alibaba PuHuiTi;
+        font-weight: 500;
+        color: black;
+        line-height: 0.747rem;
+        width: 200px;
+        height: 23px;
+        line-height: 23px;
+        margin-left: 72px;
+      }
+      .filepath {
+        width: 200px;
+        margin-left: 70px;
+        /* height: 100px; */
+      }
+      #img3 {
+        /* height: 100%;
+        width: 100%; */
+        width: 100px;
+        height: 100px;
+        display: none;
+        float: right;
+      }
+      .selectBtn {
+        width: 100px;
+        height: 23px;
+        display: inline-block;
+        text-align: center;
+        line-height: 23px;
+        margin-left: 20px;
+        background-color: rgba(113, 174, 210, 0.6);
+        border: 1.5px solid #71aed2;
+        margin-bottom: 20px;
+        padding: 8px 0;
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
+        color: #fff;
+        font-weight: 900;
+      }
+      select.mm-wrap {
+        background-color: #ffffff;
+        background-image: none !important;
+        filter: none !important;
+        border: 1px solid #e5e5e5;
+        outline: none;
+        height: 38px !important;
+        line-height: 38px;
+        font-size: 18px;
+      }
+      .image-bed-upload {
+        position: relative;
+        border: 1px solid hsla(0, 0%, 100%, 0.2);
+        border-radius: 8px;
+        background-color: hsla(0, 0%, 100%, 0.1);
+        width: 305px;
+        height: 320px;
+        margin-left: 50%;
+        -webkit-transform: translateX(-50%);
+        transform: translateX(-50%);
+        text-align: center;
+        cursor: pointer;
+      }
+      .image-bed-upload:before {
+        box-sizing: border-box;
+        content: '';
+        width: 160px;
+        height: 160px;
+        position: absolute;
+        border-radius: 50%;
+        left: 50%;
+        top: 50%;
+        -webkit-transform: translateX(-50%);
+        transform: translateX(-50%);
+        margin-top: -60px;
+        border: 10px solid hsla(0, 0%, 100%, 0.25);
+      }
+      .image-bed-upload .image-bed-icon {
+        position: relative;
+        width: 100px;
+        height: 100px;
+        margin: 0 auto;
+        margin-top: 130px;
+      }
+      .image-bed-upload .image-bed-balance-compression {
+        position: absolute;
+        width: 100%;
+        left: 0;
+        top: 65px;
+        text-align: center;
+        color: #fff;
+      }
+      .image-bed-upload .image-bed-file {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 320px;
+        opacity: 0;
+        z-index: 2;
+        cursor: pointer;
+      }
+      .image-bed .image-bed-upload .image-bed-tips {
+        position: absolute;
+        color: #fff;
+        width: 100%;
+        height: 35px;
+        bottom: 0;
+      }
+      .image-bed .image-bed-images-container {
+        margin-top: 15px;
+        margin-left: 10px;
+      }
+      .image-bed-item {
+        margin: auto auto 1.333333vw;
+        border: 1px solid hsla(0, 0%, 100%, 0.4);
+        border-radius: 5px;
+        background-color: hsla(0, 0%, 100%, 0.102);
+        width: 900px;
+        height: 160px;
+        display: flex;
+      }
+      .image-bed-item .image-bed-thumbnail {
+        width: 154px;
+        height: 154px;
+        margin-left: 3px;
+        margin-top: 3px;
+      }
+      .image-bed-item .image-bed-thumbnail img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 5px;
+      }
+      .image-bed-item .image-bed-info {
+        width: 600px;
+        margin-left: 20px;
+        color: #fff;
+        font-size: 16px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .btnClipboard {
+        height: 30px;
+        width: 100px;
+        margin: 15px;
+        border-radius: 5px;
+        font-size: 17px;
+      }
+      /* .toast {
+        width: 100px;
+        height: 60px;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        background-color: rgba(0, 0, 0, 0.6);
+        line-height: 60px;
+        border-radius: 10px;
+        text-align: center;
+        color: white;
+      } */
+      .toast-container {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        width: 230px;
+        height: 50px;
+        line-height: 52px;
+        color: #fff;
+        font-size: 18px;
+        text-align: center;
+        border-radius: 5px;
+        background-color: rgba(255, 255, 250, 0.25);
+        display: none;
+      }
+      .toast-container .toast-container-icon {
+        background-image: url(http://img.ikstatic.cn/MTU1NjU0NjM4NDAxOSM0MzIjcG5n.png);
+        background-size: 25px 25px;
+        background-repeat: no-repeat;
+        width: 25px;
+        height: 25px;
+        position: absolute;
+        bottom: 12px;
+        right: 178px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div style="margin: 30px 0 20px">
+        <span style="padding-right: 30px;">请选择上传图片项目:</span>
+        <select class="mm-wrap" style="width: 180px;" id="select">
+          <option value="0">音泡</option>
+          <option value="1">香芋</option>
+          <option value="2">77</option>
+          <option value="3">声圈</option>
+          <option value="4">酒</option>
+          <option value="5">vins</option>
+        </select>
+      </div>
+      <section class="image-bed" style="min-height: 438px;">
+        <div class="image-bed-upload " draggable="true">
+          <img
+            src="http://img.ikstatic.cn/MTU1NjIxMzUwNzkwOCM4NjgjcG5n.png"
+            alt=""
+            class="image-bed-icon"
+          />
+          <p class="image-bed-balance-compression"></p>
+          <input
+            class="image-bed-file"
+            id="file"
+            type="file"
+            name="images"
+            accept="image/png,image/gif,image/jpg,image/jpeg,audio/aac,audio/mp3,video/mp4,video/mpeg,video/3gpp,audio/ogg,audio/mpeg,audio/wav,audio/wave"
+            multiple=""
+          />
+          <p class="image-bed-tips">点击此处试试</p>
+        </div>
+        <div
+          style="width: 500px;display: none;margin-bottom: 30px;"
+          id="userUp"
+        >
+          <span class="selectBtn" id="up">上传图片</span>
+          <img src="#" id="img3" />
+        </div>
+        <div
+          class="image-bed-images-container"
+          id="imgDiv"
+          style="display: block;"
+        ></div>
+      </section>
+    </div>
+    <div class="toast-container" id="toast">
+      <img src="http://img.ikstatic.cn/MTU1NjU0NjM4NDAxOSM0MzIjcG5n.png" class="toast-container-icon" />
+      复制成功!
+    </div>
+  </body>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script src="./utils/clipboard.min.js"></script>
+  <script type="text/javascript">
+    function createHtmlCrash(count, url, tempUrl) {
+      var tempHtml =
+        '<section class="image-bed-item"><div class="image-bed-thumbnail"><img id="imgId" src="' +
+        tempUrl +
+        '" alt="" class="img"></div><div class="image-bed-info"><p>地 &nbsp; 址：<span id="imgText' +
+        count +
+        '">' +
+        url +
+        '</span></p></div><button data-clipboard-target="#imgText' +
+        count +
+        '" class="btnClipboard" id="gl' +
+        count +
+        '">复制</button></section>'
+      return tempHtml
+    }
+
+    var count = 1
+    var clipboards = []
+    var picTempUrl = ''
+    let ticket = getQueryVariable('ticket')
+    if (ticket) {
+      localStorage.setItem('ticket', ticket)
+    }
+    // 获取url参数
+    let domain = window.location.host
+    function getQueryVariable(variable) {
+      var query = window.location.search.substring(1)
+      var vars = query.split('&')
+      for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split('=')
+        if (pair[0] == variable) {
+          return pair[1]
+        }
+      }
+      return false
+    }
+
+    function isLogin() {
+      let ticketParameter = localStorage.getItem('ticket')
+      if (ticketParameter) {
+        let verification =
+          'https://sso.inkept.cn/api/v1/user/ticket/' +
+          ticketParameter +
+          '/check2'
+        $.ajax({
+          url: verification,
+          method: 'get',
+          contentType: 'application/json;charest=utf-8',
+          dataType: 'json',
+          success: function(data) {
+            if (data.status !== 0) {
+              window.location.href =
+                'https://sso.inkept.cn/?service=http://' +
+                domain +
+                '/uploadImg.html'
+            } else {
+              const ticket = getQueryVariable('ticket')
+              if (ticket) {
+                window.location.href = 'http://' + domain + '/uploadImg.html'
+              }
+            }
+          }
+        })
+      } else {
+        window.location.href =
+          'https://sso.inkept.cn/?service=http://' + domain + '/uploadImg.html'
+      }
+    }
+    // isLogin()
+    var input = document.getElementById('file')
+    input.onchange = function(e) {
+      var select_index = $('#select').get(0).selectedIndex
+      var file = this.files[0]
+      changPic(file)(setSrc)
+      if (!!file) {
+        var reader = new FileReader()
+        reader.readAsArrayBuffer(file)
+        reader.onload = function() {
+          var binary = this.result
+          let url = ''
+          switch (select_index) {
+            case 0:
+              url = 'https://uploadky.hnyapu.cn/upload/image?sufix=png'
+              break
+            case 1:
+              url = 'https://upload.boluohuyu.cn/upload/image?sufix=png'
+              break
+            case 2:
+              url = 'https://uploadky.hnyapu.cn/upload/image?sufix=png'
+              break
+            case 3:
+              url = 'https://upload.hnyapu.cn/upload/image?sufix=png'
+              break
+            case 4:
+              url = 'https://upload.9zhenge.com/upload/image?sufix=png'
+              break
+            case 5:
+              url = 'http://upload.vins.live/upload/image?sufix=png'
+              break
+          }
+          if (url) {
+            upload(binary, url)
+          } else {
+            alert('暂不支持')
+            clearFile()
+          }
+        }
+      }
+    }
+    // 预览照片
+    function changPic(file) {
+      return function(fn) {
+        var fr = new FileReader()
+        fr.readAsDataURL(file)
+
+        fr.onload = function(e) {
+          var result = e.target.result
+          fn(result)
+        }
+      }
+    }
+    function setSrc(url) {
+      picTempUrl = url
+    }
+    // 文件上传
+    function upload(binary, url) {
+      var xhr = new XMLHttpRequest()
+      xhr.open('POST', url)
+      xhr.overrideMimeType('application/octet-stream')
+      //直接发送二进制数据
+      if (xhr.sendAsBinary) {
+        xhr.sendAsBinary(binary)
+      } else {
+        xhr.send(binary)
+      }
+      // 监听变化
+      xhr.onreadystatechange = function(data) {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            // 响应成功
+            var responseText = xhr.responseText
+            responseText = JSON.parse(responseText)
+            console.log(responseText)
+            if (responseText.dm_error === 0) {
+              count++
+              var tempHtml = createHtmlCrash(
+                count,
+                responseText.url,
+                picTempUrl
+              )
+              $('.image-bed-images-container').prepend(tempHtml)
+              clipboards.push(initCopy(count))
+              console.log(clipboards)
+            } else {
+              alert(responseText.error_msg)
+            }
+            // 清空input file文件原生js
+            clearFile()
+          } else {
+            alert('上传失败')
+            // 清空input file文件原生js
+            clearFile()
+          }
+        }
+      }
+    }
+    function initCopy(count) {
+      var clipboard = new ClipboardJS(`#gl${count}`)
+      clipboard.on('success', function(e) {
+        $('#toast').css('display', 'block');
+        setTimeout(() => {
+          $('#toast').css('display', 'none');
+        }, 2000);
+        console.info('Text:', e.text)
+        e.clearSelection()
+      })
+      clipboard.on('error', function(e) {
+        alert('请手动复制')
+      })
+      return clipboard
+    }
+    function clearFile() {
+      var file = document.getElementById('file')
+      file.value = ''
+    }
+  </script>
+</html>
