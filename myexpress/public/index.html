@@ -85,6 +85,16 @@
         color: white;
         margin: 20px auto;
       }
+      .page-foot {
+        color: #fff !important;
+        background-color: #292a2bff !important;
+        padding: 28px 0;
+        clear: both;
+        text-align: center;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+      }
     </style>
   </head>
   <body>
@@ -124,6 +134,21 @@
       </div>
       <div class="generateUrl">生成的链接为：<span id="result"></span></div>
     </div>
+    <div id="92yuedu.cn" style="display: block;" class="page-foot">
+      <div class="page-foot-bd">
+        <div class="page-foot-copyright">
+          联系邮箱：bigchicken3@163.com
+          <br />
+          两块大鸡腿&nbsp;版权所有&nbsp;
+          <br />
+          <span
+            ><a target="_blank" href="http://www.beian.miit.gov.cn" style="color: white"
+              >备案号：粤ICP备19153749号</a
+            ></span
+          >
+        </div>
+      </div>
+    </div>
   </body>
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
   <script type="text/javascript">
@@ -162,14 +187,15 @@
         })
       } else {
         if (ticketParameter) {
-          window.location.href = 'http://' + domain + '?ticket=' + ticketParameter
+          window.location.href =
+            'http://' + domain + '?ticket=' + ticketParameter
         } else {
           window.location.href =
-                'https://sso.inkept.cn/?service=http://' + domain
+            'https://sso.inkept.cn/?service=http://' + domain
         }
       }
     }
-    isLogin()
+    // isLogin()
 
     $('#submit').click(function() {
       let titleValue = $('#title').val()
